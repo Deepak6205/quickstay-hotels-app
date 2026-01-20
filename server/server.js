@@ -3,6 +3,7 @@ import "dotenv/config";
 import cors from "cors";
 import connectDB from "./configs/db.js";
 import { clerkMiddleware } from '@clerk/express'
+import clerkWebHooks from "./controllers/clerkWebhooks.js";
 
 connectDB();
 const app = express();
@@ -11,6 +12,9 @@ app.use(cors()) // Enable Corss-origin Resource sharing
 // middleware 
 app.use(express.json());
 app.use(clerkMiddleware());
+
+//API to listen clerk webhook
+app.use("/api/clerk",clerkWebHooks)
 
 app.get('/',(req,res)=>res.send("API IS WORKING FINE"));
 
