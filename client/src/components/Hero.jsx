@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { assets, cities } from "../assets/assets";
 import { useAppContext } from "../context/AppContext";
 
+
 const Hero = () => {
   const [destination, setDestination] = useState("");
   const { navigate, getToken, axios, setSearchedCities } = useAppContext();
@@ -15,20 +16,22 @@ const Hero = () => {
       { headers: { Authorization: `Bearer ${await getToken()}` } },
     );
     // add dstntn to srchd ctis max 3 rcnt srchd ctis
-    setSearchedCities((prevSearchedCities)=>{
-      const updatedSearchedCities = [...prevSearchedCities,destination];
-      if(updatedSearchedCities.length > 3){
+    setSearchedCities((prevSearchedCities) => {
+      const updatedSearchedCities = [...prevSearchedCities, destination];
+      if (updatedSearchedCities.length > 3) {
         updatedSearchedCities.shift();
       }
       return updatedSearchedCities;
-    })
+    });
   };
   return (
     <div
-      className="flex flex-col items-start justify-center px-6 
-    md:px-16 lg:px-24 xl:px-32 text-white bg-[url('src/assets/heroImage.png')] 
-    bg-no-repeat bg-cover bg-center h-screen"
-    >
+  style={{ backgroundImage: `url(${assets.heroImage})` }}
+  className="flex flex-col items-start justify-center px-6 
+md:px-16 lg:px-24 xl:px-32 text-white 
+bg-no-repeat bg-cover bg-center h-screen"
+>
+
       <p className="bg-[#49B9FF]/50 px-3.5 py-1 rounded-full mt-20">
         The Ultimate Hotel Experience
       </p>
