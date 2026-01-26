@@ -13,11 +13,17 @@ import bookingRouter from "./routes/bookingRoutes.js";
 connectDB();
 connectCloudinary();
 const app = express();
-app.use(cors()) // Enable Corss-origin Resource sharing
+app.use(cors({
+  origin: [
+    "http://localhost:5173",
+    "https://quickstay-hotels-app.vercel.app"
+  ],
+  credentials: true,
+}));
 
-// middleware 
 app.use(express.json());
 app.use(clerkMiddleware());
+
 
 //API to listen clerk webhook
 app.use("/api/clerk",clerkWebHooks)
