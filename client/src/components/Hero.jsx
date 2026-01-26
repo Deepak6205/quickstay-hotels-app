@@ -1,33 +1,63 @@
-import React from "react";
+import React, { useState } from "react";
 import { assets, cities } from "../assets/assets";
+import { useAppContext } from "../context/AppContext";
 
 const Hero = () => {
+  const [destination, setDestination] = useState("");
+  const { navigate, getToken, axios, setSearchedCities } = useAppContext();
+  const onSearch = async (e) => {
+    e.preventDefault();
+    navigate(`/rooms?destination=${destination}`);
+    // api to save recent searched cities
+    await axios.post(
+      "/api/user/store-recent-search",
+      { recentSearchedCities: destination },
+      { headers: { Authorization: `Bearer ${await getToken()}` } },
+    );
+    // add dstntn to srchd ctis max 3 rcnt srchd ctis
+    setSearchedCities((prevSearchedCities)=>{
+      const updatedSearchedCities = [...prevSearchedCities,destination];
+      if(updatedSearchedCities.length > 3){
+        updatedSearchedCities.shift();
+      }
+      return updatedSearchedCities;
+    })
+  };
   return (
-    <div className="flex flex-col items-start justify-center px-6 
+    <div
+      className="flex flex-col items-start justify-center px-6 
     md:px-16 lg:px-24 xl:px-32 text-white bg-[url('src/assets/heroImage.png')] 
-    bg-no-repeat bg-cover bg-center h-screen">
+    bg-no-repeat bg-cover bg-center h-screen"
+    >
       <p className="bg-[#49B9FF]/50 px-3.5 py-1 rounded-full mt-20">
         The Ultimate Hotel Experience
       </p>
-      <h1 className="font-playfair text-2xl md:text-5xl md:text-[56px]
-       md:leading-[56px] font-bold md:font-extrabold max-w-xl mt-4">
+      <h1
+        className="font-playfair text-2xl md:text-5xl md:text-[56px]
+       md:leading-[56px] font-bold md:font-extrabold max-w-xl mt-4"
+      >
         Discover Your Perfect Geteway Destination
       </h1>
       <p className="max-w-130 mt-2 text-sm md:text-base">
         Unparalleled luxrury and comfort await at the world's most exclusive
         hotels and resorts. Start your journey today.
       </p>
-      <form className="bg-white text-gray-500
+      <form
+        onSubmit={onSearch}
+        className="bg-white text-gray-500
        rounded-lg px-6 py-4 mt-8 flex flex-col md:flex-row max-md:items-start
-        gap-4 max-md:mx-auto">
+        gap-4 max-md:mx-auto"
+      >
         <div>
           <div className="flex items-center gap-2">
-                <img src={assets.calenderIcon} alt="" className="h-4"/>
+            <img src={assets.calenderIcon} alt="" className="h-4" />
 
             <label htmlFor="destinationInput">Destination</label>
           </div>
 
           <input
+            onChange={(e) => setDestination(e.target.value)}
+            value={destination}
             list="destinations"
             id="destinationInput"
             type="text"
@@ -37,15 +67,15 @@ const Hero = () => {
             required
           />
           <datalist id="destinations">
-            {cities.map((city,index)=>(
-                <option value={city} key={index}/>
+            {cities.map((city, index) => (
+              <option value={city} key={index} />
             ))}
           </datalist>
         </div>
 
         <div>
           <div className="flex items-center gap-2">
-            <img src={assets.calenderIcon} alt="" className="h-4"/>
+            <img src={assets.calenderIcon} alt="" className="h-4" />
             <label htmlFor="checkIn">Check in</label>
           </div>
 
@@ -59,7 +89,7 @@ const Hero = () => {
 
         <div>
           <div className="flex items-center gap-2">
-            <img src={assets.calenderIcon} alt="" className="h-4"/>
+            <img src={assets.calenderIcon} alt="" className="h-4" />
 
             <label htmlFor="checkOut">Check out</label>
           </div>
@@ -86,10 +116,12 @@ const Hero = () => {
           />
         </div>
 
-        <button className="flex items-center justify-center gap-1 rounded-md
+        <button
+          className="flex items-center justify-center gap-1 rounded-md
          bg-black py-3 px-4 text-white my-auto cursor-pointer max-md:w-full 
-         max-md:py-1">
-          <img src={assets.searchIcon} alt="searchIcon" className="h-7"/>
+         max-md:py-1"
+        >
+          <img src={assets.searchIcon} alt="searchIcon" className="h-7" />
           <span>Search</span>
         </button>
       </form>

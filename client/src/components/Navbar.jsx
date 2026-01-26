@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, } from "react-router-dom";
 import { assets } from "../assets/assets";
-import { useClerk, useUser, UserButton } from "@clerk/clerk-react";
+import { useClerk, UserButton } from "@clerk/clerk-react";
+import { useAppContext } from "../context/AppContext";
 const BookIcon = () => (
   <svg
     className="w-4 h-4 text-gray-700"
@@ -31,10 +32,12 @@ const Navbar = () => {
 
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const navigate = useNavigate();
+  
   const location = useLocation();
   const { openSignIn } = useClerk();
-  const { user } = useUser();
+  
+
+  const {user,navigate,isOwner,setShowHotelReg} = useAppContext();
 
   useEffect(() => {
     if(location.pathname !== '/'){
@@ -85,13 +88,18 @@ const Navbar = () => {
             />
           </a>
         ))}
-        <button onClick={()=>navigate('/owner')}
+
+        { user && (
+          <button onClick={()=> isOwner ? navigate('/owner') : setShowHotelReg(true)}
           className={`border px-4 py-1 text-sm font-light rounded-full cursor-pointer ${
             isScrolled ? "text-black" : "text-white"
           } transition-all`} 
         >
-          Dashboard
-        </button>
+          {isOwner ? "Dashboard" : "List Your Hotel"}
+         
+        </button> 
+        )
+        }
       </div>
 
       <div className="hidden md:flex items-center gap-4">
@@ -165,8 +173,8 @@ const Navbar = () => {
         ))}
 
         { user && <button className="border px-4 py-1 text-sm font-light 
-        rounded-full cursor-pointer transition-all" onClick={()=>navigate('/owner')}>
-          Dashboard
+        rounded-full cursor-pointer transition-all" onClick={()=> isOwner ? navigate('/owner') : setShowHotelReg(true)}>
+          {isOwner ? "Dashboard" : "List Your Hotel"}
         </button>}
 
         {!user && <button
