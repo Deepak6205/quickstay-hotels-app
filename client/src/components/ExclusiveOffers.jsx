@@ -1,8 +1,10 @@
 import React from 'react'
 import Title from './Title'
 import { assets, exclusiveOffers } from '../assets/assets'
+import { useAppContext } from '../context/AppContext'
 
 const ExclusiveOffers = () => {
+    const {navigate} = useAppContext();
   return (
     <div className='flex flex-col items-center px-6 md:px-16 lg:px-24 xl:px-32 pt-20
      pb-30'>
@@ -30,7 +32,7 @@ const ExclusiveOffers = () => {
                         <p>{item.description}</p>
                         <p className='text-xs text-white/70 mt-3'>Expires {item.expiryDate}</p>
                     </div>
-                    <button className='flex items-center gap-2 font-medium 
+                    <button onClick={navigate('/rooms')} className='flex items-center gap-2 font-medium 
                     cursor-pointer mt-4 mb-5'>
                         View Offers
                         <img src={assets.arrowIcon} alt="arrow-icon" 
