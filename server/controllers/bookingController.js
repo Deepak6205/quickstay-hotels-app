@@ -129,7 +129,7 @@ export const stripePayment = async (req,res)=>{
         const roomData = await Room.findById(booking.room).populate('hotel');
         const totalPrice = booking.totalPrice;
         const {origin} = req.headers;
-        const stripeInstance = new stripe(process.env.STRIPE_PUBLISHABLE_KEY);
+        const stripeInstance = new stripe(process.env.STRIPE_SECRET_KEY);
         const line_items = [{
             price_data:{
                 currency: 'usd',
